@@ -11,17 +11,22 @@
     - Community Maintainers
   - Google Summer of Code 2017
   - Google Summer of Code 2018
+  - Google Summer of Code 2019
+  - Google Season of Docs 2019
   - Promoting
   - Reporting Issues
   - Security:
     - Responsible Disclosure Policy
   - Translating
+  - Website:
+    - Webinars
 - Getting Support
 - Installation:
   - Rocket.Chat Cloud
   - PaaS Deployments:
     - Aliyun
-    - AWS
+    - AWS:
+      - EKS
     - Cloudron.io
     - Digital Ocean
     - DPlatform
@@ -38,14 +43,15 @@
     - Sandstorm.io
     - Scalingo
     - Sloppy.io
-    - WeDeploy
     - D2C.io
+    - Syncloud.org
   - Docker containers:
     - Generic Linux
     - systemd
     - High Availability Install
     - Available Images
     - Docker Compose
+  - RocketChatCTL
   - Manual Installation:
     - CentOS
     - Debian
@@ -55,7 +61,10 @@
     - Ubuntu:
       - Snaps:
         - AutoSSL
+    - Univention Corporate Server (UCS)
     - Mongo Options
+    - Mongo Versions
+    - Mongo Replicas
     - Configuring SSL Reverse Proxy
     - PM2, Systemd, Upstart
     - Running in a sub folder
@@ -66,6 +75,7 @@
   - Mobile and Desktop Apps
   - Updating:
     - From 0.x.x to 0.40.0
+    - To 1.0
   - Minimum Requirements
   - Community Supported Installation:
     - FreeBSD:
@@ -77,30 +87,39 @@
   - Connecting to a Server
   - Registration
   - Login
+  - Talking to users from another server
   - Channels
   - Messaging
   - Channel Actions
   - Managing your Account
-  - Voice and Video Calls
+  - End to End Encryption
+  - Voice and Video Conferencing
+  - Experimental App
 - Administrator guides:
   - Account Settings
   - Authentication:
     - CAS
     - Ldap
-    - Oauth
+    - Oauth:
+      - Okta
+      - Keycloak
     - SAML:
       - Oracle Cloud
     - WordPress
+  - Custom Emoji
+  - Custom Sounds
   - Database-Migration
   - Email:
     - Setup
     - Editing Emails Content
     - Mailer
     - Direct Reply
+  - Federation
   - File Upload:
     - Amazon S3
     - Google Cloud Storage
     - Minio
+    - WebDAV
   - Import:
     - CSV
     - HipChat:
@@ -121,13 +140,15 @@
     - Google-Calendar
     - Guggy
     - Jenkins
+    - JFrog Xray
     - Jira
+    - MicroBadger
+    - NextCloud and WebDAV
     - NewRelic
     - nixstats
     - Osticket
     - PagerDuty
     - Prometheus
-    - ReplyGif
     - ReviewBoard
     - RunDeck
     - Sentry
@@ -135,22 +156,34 @@
     - Travis CI
     - Trello
     - Uptime Robot
-  - Jitsi Video Bridge
+  - Rocket.Chat Apps:
+    - Jira Server Integration
+    - Bitbucket Server Integration
+    - Bamboo Integration
+    - Confluence Server Integration
+  - Google Cloud:
+    - Auto Translate
+  # - Google Drive
+  - Setting Up Video Conferencing
   - Livechat:
     - Livechat Queues
+    - Omnichannel Integration
   - Notifications:
     - Push Notifications
   - Permissions
+  - Custom Fields
   - Plug-ins:
     - Drupal
     - Pidgin
   - Create the First Admin
   - Restoring an Admin
+  - Retention Policies
   - Settings Via Env Vars
   - Youtube Broadcasting
 - Developer guides:
     - Quick Start
     - Branches and Releases
+    - Client Compatibility Matrix
     - Code Styleguide:
       - less
     - Deeplink
@@ -163,8 +196,15 @@
     - Internationalization
     - Livechat API
     - Mobile Apps:
+      - Analytics & Data Usage
       - Supporting SSL
-      - Supported Servers Versions
+    - Developing Apps:
+      - Getting Started
+    - GraphQL API:
+       - Authentication
+       - Schema
+       - Setup
+       - Subscription
     - Realtime-API:
       - Method Calls:
         - Login
@@ -200,8 +240,10 @@
         - Save Room Settings
       - Subscriptions:
         - Stream Notify All
+        - Stream Notify Logged
         - Stream Notify User
         - Stream Notify Room
+        - Stream Notify Room Users
         - Stream Room Messages
       - The Message Object
       - The Room Object
@@ -210,7 +252,11 @@
         - registerGuest
         - sendMessageLivechat
         - sendOfflineMessage
+        - streamlivechatroom
     - Rest API:
+      - Assets:
+        - setAsset
+        - unsetAsset
       - Authentication:
         - facebook
         - google
@@ -220,27 +266,38 @@
         - twitter
       - Channels:
         - addAll
+        - AddLeader
         - addModerator
         - addOwner
         - archive
         - close
         - counters
         - create
+        - delete
         - files
         - getAllUserMentionsByChannel
         - getIntegrations
         - history
         - info
         - invite
+        - join
         - kick
         - leave
         - list.joined
         - list
+        - members
+        - messages
+        - moderators
+        - online
         - open
+        - removeLeader
         - removeModerator
         - removeOwner
         - rename
+        - roles
+        - setAnnouncement
         - setCustomFields
+        - setDefault
         - setDescription
         - setJoinCode
         - setPurpose
@@ -250,8 +307,12 @@
         - unarchive
       - Chat:
         - delete
+        - followMessage
+        - getDeletedMessages
         - getMessage
         - getMessageReadReceipts
+        - getThreadMessages
+        - getThreadsList
         - pinMessage
         - postMessage
         - react
@@ -259,21 +320,32 @@
         - search
         - starMessage
         - sendMessage
+        - syncThreadMessages
+        - syncThreadsList
+        - unfollowMessage
         - unPinMessage
         - unStarMessage
         - update
+        - ignoreUser
       - Commands:
         - get
         - list
         - run
+      - Emoji Custom:
+        - create
+        - delete
+        - list
+        - update
       - Groups:
         - addAll
+        - addLeader
         - addModerator
         - addOwner
         - archive
         - close
         - counters
         - create
+        - delete
         - files
         - getIntegrations
         - history
@@ -283,10 +355,16 @@
         - leave
         - list
         - listAll
+        - members
+        - messages
+        - moderators
         - open
+        - removeLeader
         - removeModerator
         - removeOwner
         - rename
+        - roles
+        - setAnnouncement
         - setCustomFields
         - setDescription
         - setPurpose
@@ -302,27 +380,54 @@
         - history
         - list.everyone
         - list
+        - members
+        - messages
         - messages.others
         - open
         - setTopic
       - Integration:
         - create
+        - history
         - list
         - remove
       - Livechat:
+        - agent
+        - config
+        - custom-fields
         - department
+        - inquiries.list
+        - inquiries.take
+        - message
+        - room
         - sms-incoming
         - users
+        - video-call
+        - visitor
       - Miscellaneous:
         - directory
         - info
+        - shield.svg
         - spotlight
         - statistics
         - statistics.list
+      - Permissions:
+        - list
+        - update
+      - Roles:
+        - create
+        - list
+        - addUserToRole
+      - Push:
+        - push.token
+        - deletePushToken
       - Rooms:
         - cleanHistory
+        - createDiscussion
         - favorite
         - get
+        - getDiscussions
+        - info
+        - leave
         - saveNotification
         - upload
       - Settings:
@@ -338,25 +443,35 @@
         - read
         - unread
       - Users:
+        - presence
         - create
         - createToken
         - delete
+        - deleteOwnAccount
         - forgotPassword
+        - generatePersonalAccessToken
         - getAvatar
+        - getPersonalAccessTokens
         - getPresence
         - get-preferences
         - getUsernameSuggestion
         - info
         - list
+        - regeneratePersonalAccessToken
         - register
+        - removePersonalAccessToken
         - resetAvatar
         - setAvatar
         - set-preferences
+        - setActiveStatus
         - update
         - updateOwnBasicInfo
+      - Video Conference:
+        - jitsi-update-timeout
       - Offset and Count and Sort Info
-      - Permissions
+      - Rate Limiter
       - Query and Fields Info
+      - Personal Access Tokens
     - Schema Definition
     - Testing
     - Troubleshooting
@@ -365,10 +480,10 @@
       - Components
       - Themes
 - Bots:
-  - Bots FAQ
   - Bots Architecture
   - Creating Bot Users
   - Configure Bot Environment
+  - Running a bBot Bot
   - Running a Hubot Bot
   - Running a Botkit Bot
   - Running a Rasa Bot

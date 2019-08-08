@@ -1,4 +1,6 @@
-# User Get Avatar
+# Get Avatar
+
+Gets the URL for a user’s avatar.
 
 | URL                       | Requires Auth | HTTP Method |
 | :------------------------ | :------------ | :---------- |
@@ -10,7 +12,7 @@
 | :--------------------- | :------------------ | :------- | :------------------------------ |
 | `userId` or `username` | `BsNr28znDkG8aeo7W` | Required | The id or username of the user. |
 
-## Example Call
+## Example Call - Via userId
 
 ```bash
 curl http://localhost:3000/api/v1/users.getAvatar?userId=BsNr28znDkG8aeo7W
@@ -18,7 +20,21 @@ curl http://localhost:3000/api/v1/users.getAvatar?userId=BsNr28znDkG8aeo7W
 
 ## Example Result
 
-    http://localhost:3000/avatar/bobsmith
+```
+http://localhost:3000/avatar/bobsmith
+```
+
+## Example Call - Via username
+
+```bash
+curl http://localhost:3000/api/v1/users.getAvatar?username=bobsmith
+```
+
+## Example Result
+
+```
+http://localhost:3000/avatar/bobsmith
+```
 
 _N.B. the response is a 307 temporary redirect_
 

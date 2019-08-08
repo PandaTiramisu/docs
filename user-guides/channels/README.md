@@ -40,6 +40,17 @@ To activate Unread Mode you must go to Preferences under My Account and change t
 
 When someone mentions you with `@username`, `@all` or `@here`, a symbol or a number will appear alongside the channel name.  If you were mentioned, an `@` will show.  If someone mentions `@all` or `@here` a number will show up showing the number of times you were mentioned.
 
+### Notifications Preferences
+
+There is a number of settings about notifications that a user can customize specifically to channels. One can find these settings in the `Notifications Preferences` under the `More` section of the channel whose notification settings is to change.
+
+- **Mute/Receive alerts:** User can choose to receive or not any notifications from a channel.
+- **Mute/Receive mentions:** User can choose not to receive notifications for mentions while receiving notifications for messages in a channel.
+- **Hide/Show counter:** User can choose whether to show the number of unread messages for a channel.
+- **Notification sound:** Currently, users can also choose a sound for notifications besides the alerts for the `Desktop` whereas `Mobile` currently supports only the alerts. One can select when to play the audio, duration of the audio and also the audio itself.
+
+> There are some default choices for audio provided by Rocket chat. However, you also get to choose custom audio files for the same. Get further information about [Custom Sounds](../../administrator-guides/custom-sounds).
+
 ## Joining new channels and starting direct messages
 
 There are three ways of joining a public channel, you can either search for it, be invited to it or be mentioned in it.
@@ -74,7 +85,9 @@ To create a channel you need to click on the plus `+` button that is alongside t
 
 This will open a pop up, and there you can set the name of that channel, if it is public or private, set it to read-only, broadcast it and invite users.
 
-Read only channels, messages can only be posted by people with the right permission. Users can react to messages in this Good for announcements, voting channels and such.
+In read only channels, messages can only be posted by people with the write permissions. Users can react to messages in this channel. Read only channels are good for announcements or voting for example.
+
+Encrypted channels, messages will be end to end encrypted.  See: [End to End Encryption](../end-to-end-encryption/) for details.
 
 Broadcasted channels will behave like read only channels, with only users with the right permission being able to post there. The differences to a read only channel are:
 

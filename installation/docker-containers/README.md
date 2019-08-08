@@ -1,10 +1,10 @@
 # Docker Containers
 
-Docker-Ubuntu 14.04 (64 bit) VPS with Nginx SSL and Hubot
+Docker-Ubuntu 16.04 LTS (64 bit) VPS with Nginx SSL and Hubot
 
 ## Introduction
 
-This guide will walk you through installation and configuration of a Docker based Rocket Chat instance on Ubuntu 14.04 (64 bit) VPS, using Nginx as a reverse SSL proxy, Hubot chatbot, and necessary scripts for automatic restart and crash recovery.
+This guide will walk you through installation and configuration of a Docker based Rocket Chat instance on Ubuntu 16.04 LTS (64 bit) VPS, using Nginx as a reverse SSL proxy, Hubot chatbot, and necessary scripts for automatic restart and crash recovery.
 
 For people new to docker here's a quick primer: Docker is a program to allow other programs and their dependencies to be run in a type of virtual container. Using this deployment guide, you do not need to download any of the rocket chat program files manually whatsoever. Docker will get everything that is needed for Rocket Chat to run. If you follow this guide closely, it provides everything from start to finish needed to install, create, and run your own Rocket Chat web instance with nginx handling SSL termination, and a Hubot chatbot keeping your general chat channel warm on those cold winter mornings.
 
@@ -29,7 +29,7 @@ This guide is designed for everyone, however, it is intentionally detailed to he
 
 This guide is written assuming that you're starting with:
 
-- a clean new installation of Ubuntu 14.04 (64 bit)
+- a clean new installation of Ubuntu 16.04 LTS (64 bit)
 - properly configured DNS that resolves requests to your domain name
 
 - - -
@@ -107,10 +107,11 @@ Press **Y** when prompted to proceed with the install.
 **Install Docker**
 <https://docs.docker.com/linux/step_one/>
 
-**Install Docker-Compose version 1.4.2 (64 bit) via cURL**
+**Install Docker-Compose version 1.24.0 (64 bit) via cURL**
 
 ```
-sudo curl -L https://github.com/docker/compose/releases/download/1.4.2/docker-compose-Linux-x86_64 > /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
+
 ```
 
 **Set the executable permissions:**
@@ -119,7 +120,7 @@ sudo curl -L https://github.com/docker/compose/releases/download/1.4.2/docker-co
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-**Notes:** We're using version 1.4.2 for this guide. If you wish to try a newer version, you will need to edit the cURL command to reflect the alternate version number. If you get a "Permission denied" error, your `/usr/local/bin` directory probably isn't writable and you'll need to install Compose as the superuser. Run `sudo -i`, then the two commands above, then `exit`. (credit: docker compose docs)
+**Notes:** We're using version 1.24.0 for this guide. If you wish to try a newer version, you will need to edit the cURL command to reflect the alternate version number. If you get a "Permission denied" error, your `/usr/local/bin` directory probably isn't writable and you'll need to install Compose as the superuser. Run `sudo -i`, then the two commands above, then `exit`. (credit: docker compose docs)
 
 **Confirm docker-compose is properly installed**
 
@@ -158,9 +159,9 @@ sudo apt-get install nginx
 
 ### 5a. Using a commercial SSL cert (recommended)
 
-If don't have a certificate you can grab one for free at [Let's Encrypt](https://letsencrypt.org/).
+If you don't have a certificate already, you can grab one for free at [Let's Encrypt](https://letsencrypt.org/).
 
-Of if you want to use a self-signed SSL cert instead, skip this part and continue at [Self-Signed SSL](#5b-self-signed-ssl) below.
+Or, if you want to use a self-signed SSL cert instead, skip ahead to [Self-Signed SSL](#5b-self-signed-ssl).
 
 **Install the private key (created when you generated the CSR):**
 
@@ -186,7 +187,7 @@ Save and Exit.
 
 ### 5b. Self-Signed SSL
 
-If you bought an SSL cert and installed it via the steps above, skip this step.
+If you bought a SSL cert and installed it via the steps above, skip this step.
 
 **Create and install a self-signed SSL certificate:**
 
@@ -196,7 +197,7 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/cert
 
 **Follow the prompts.**
 
-Tip: It is important that the Common Name be set properly. Enter your fully qualified domain name (FQDN) here or, if you don’t have FQDN, use your public IP address. For example, my FQDN for the chat server is `chat.inumio.com`
+Tip: It is **IMPORTANT** that the **Common Name** be set properly. Enter your fully qualified domain name (FQDN) here or, if you don’t have a FQDN, use your public IP address. For example, my FQDN for the chat server is `chat.inumio.com`.
 
 Save and Exit.
 
@@ -291,38 +292,61 @@ sudo nano /var/www/rocket.chat/docker-compose.yml
 ```
 
 ```
-db:
-  image: mongo
-  volumes:
-    - ./data/runtime/db:/data/db
-    - ./data/dump:/dump
-  command: mongod --smallfiles
+version: '2'
 
-rocketchat:
-  image: rocketchat/rocket.chat:latest
-  environment:
-    - MONGO_URL=mongodb://db:27017/rocketchat
-    - ROOT_URL=https://chat.inumio.com
-    - Accounts_UseDNSDomainCheck=True
-  links:
-    - db:db
-  ports:
-    - 3000:3000
+services:
+  rocketchat:
+    image: rocket.chat:latest
+    command: bash -c 'for i in `seq 1 30`; do node main.js && s=$$? && break || s=$$?; echo "Tried $$i times. Waiting 5 secs..."; sleep 5; done; (exit $$s)'
+    restart: unless-stopped
+    volumes:
+      - ./uploads:/app/uploads
+    environment:
+      - PORT=3000
+      - ROOT_URL=http://chat.inumio.com
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+      - Accounts_UseDNSDomainCheck=True
+    depends_on:
+      - mongo
+    ports:
+      - 3000:3000
 
-hubot:
-  image: rocketchat/hubot-rocketchat:v0.1.4
-  environment:
-    - ROCKETCHAT_URL=165.114.165.21:3000
-    - ROCKETCHAT_ROOM=GENERAL
-    - ROCKETCHAT_USER=Botname
-    - ROCKETCHAT_PASSWORD=BotPassw0rd
-    - BOT_NAME=Botname
-    - EXTERNAL_SCRIPTS=hubot-help,hubot-seen,hubot-links,hubot-greetings
-  links:
-    - rocketchat:rocketchat
-# this is used to expose the hubot port for notifications on the host on port 3001, e.g. for hubot-jenkins-notifier
-  ports:
-    - 3001:8080
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    volumes:
+     - ./data/db:/data/db
+     - ./data/dump:/dump
+    command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
+
+  # this container's job is just run the command to initialize the replica set.
+  # it will run the command and remove himself (it will not stay running)
+  mongo-init-replica:
+    image: mongo
+    command: 'bash -c "for i in `seq 1 30`; do mongo mongo/rocketchat --eval \"rs.initiate({ _id: ''rs0'', members: [ { _id: 0, host: ''localhost:27017'' } ]})\" && s=$$? && break || s=$$?; echo \"Tried $$i times. Waiting 5 secs...\"; sleep 5; done; (exit $$s)"'
+    depends_on:
+      - mongo
+
+  # hubot, the popular chatbot (add the bot user first and change the password before starting this image)
+  hubot:
+    image: rocketchat/hubot-rocketchat:latest
+    restart: unless-stopped
+    environment:
+      - ROCKETCHAT_URL=165.114.165.21:3000
+      - ROCKETCHAT_ROOM=GENERAL
+      - ROCKETCHAT_USER=bot
+      - ROCKETCHAT_PASSWORD=botpassword
+      - BOT_NAME=bot
+  # you can add more scripts as you'd like here, they need to be installable by npm
+      - EXTERNAL_SCRIPTS=hubot-help,hubot-seen,hubot-links,hubot-diagnostics
+    depends_on:
+      - rocketchat
+    volumes:
+      - ./scripts:/home/hubot/scripts
+  # this is used to expose the hubot port for notifications on the host on port 3001, e.g. for hubot-jenkins-notifier
+    ports:
+      - 3001:8080
 ```
 
 - Edit the ROOT_URL value to be your FQDN.
@@ -332,7 +356,11 @@ hubot:
 
 Save and Exit.
 
-- - -
+Start the services by:
+
+```bash
+docker-compose up -d
+```
 
 ## 7. Automatic Startup & Crash Recovery
 
@@ -358,7 +386,7 @@ chdir /var/www/rocket.chat
 
 script
     # Showtime
-    exec /usr/local/bin/docker-compose up db
+    exec /usr/local/bin/docker-compose up mongo
 end script
 ```
 
@@ -455,19 +483,13 @@ No worries! In order to get your bot up and running, we must register it…
 
 ## 9. Registering & Configuring Hubot, the chat robot
 
-Previously, we created the docker-compose.yml file. It's this file where we defined the basic attributes for Hubot. We set the bot name, password, room to join, and scripts to run. Before the bot can join the chat room, we must manually register the bot using the configuration details we provided in docker-compose.yml. Log out, if you're logged in to the chat room.
+Previously, we created the docker-compose.yml file. It's this file where we defined the basic attributes for Hubot. We set the bot name, password, room to join, and scripts to run. Before the bot can join the chat room, we must manually create the bot using the configuration details we provided in docker-compose.yml.
 
-Browse to the chat room login page, and click the link to register a new account. This time, you must register an account for your bot to use.
+<https://github.com/RocketChat/hubot-rocketchat#creating-a-user-on-the-server>
 
-Name: use the value you specified for ROCKETCHAT_USER
-Email: if you plan to enable new account email verification, be sure to use a valid email here
-Password:  use the value you specified for ROCKETCHAT_PASSWORD
+You can now optionally login and set some of the preferences, such as bot avatar. When finished, log out of the bot account.
 
-When prompted in the next screen to specify a name for @ mentions, use the value you specified for BOT_NAME.
-
-Once you're logged in with the new bot account, you can go ahead and set some of the preferences, such as bot avatar. When finished, log out of the bot account.
-
-With the bot account registered, you can force it to join by simply rebooting the server, upon which the init script should automatically launch your chat room, and the bot should join the “General” room.
+With the bot account created, you can force it to join by simply rebooting the server, upon which the init script should automatically launch your chat room, and the bot should join the “General” room.
 
 For basic command help, in the chat message box, type BOTNAME help (where BOTNAME is your bot's name).
 
@@ -550,7 +572,7 @@ _When I upload a file the server crashes!_
 If you're running low on system resources, such as RAM, this can cause problems with not just performance, but stability. Make sure that you're not running out of memory, or have any other choke points, like not enough CPU, etc. One way to check, is to issue the following command via SSH (or console) which runs TOP, a utility that will show valuable information about system resources and processes.
 
 ```
-sudo TOP
+sudo top
 ```
 
 With TOP running, try to replicate the problem while watching TOP for high loads, overloaded CPU, etc. While Rocket.Chat can be run on a single core with 512MB of memory, that's really not enough for stable performance. If you're seeing high values in TOP, consider upgrading your server to at least 1GB or RAM, or more.

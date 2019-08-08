@@ -18,12 +18,6 @@ In this article we explained how to start the end to end and unit tests in Rocke
 
 This style guide needs to be converted to CSS, since the base is almost the same.
 
-## Permissions
-
-Not all permissions are listed on this article, and some of the permissions listed there don't have a description.
-
-And Fix the markdown table on that article.
-
 ## GridFS
 
 Tell how the GridFS file storage mode works and how to configure it.
@@ -35,16 +29,6 @@ Tell how the GridFS file storage mode works and how to configure it.
 ## Updating
 
 Add more updating guides for different environments.
-
-## Voice and Video Calls
-
-Add proper instructions on how to use the video conference tools (both jitsi and WebRTC). Today we only have the requirements to run the WebRTC tool.
-
-Also differentiate jitsi from WebRTC.
-
-## ScreenSharing
-
-Add instructions on how to use screen-sharing.
 
 ## RedHat
 
@@ -104,14 +88,6 @@ Create a guide on how to use the `Message` setting section.
 
 Missing meteor Oauth section.
 
-## Adding Custom Emoji
-
-Create a guide on how to add custom emojis to Rocket.Chat.
-
-## Adding Custom Sounds
-
-Create a guide on how to add custom sounds to Rocket.Chat.
-
 ## Auto Translation
 
 Create a guide on how to set up auto translation and use it.
@@ -124,30 +100,6 @@ Create a guide on how to create custom oauth apps.
 
 Create a guide on how to use Rocket.Chat as an Oauth provider.
 
-## channels.members
-
-Create documentation on how the `channels.members` REST API endpoint works
-
-## groups.members
-
-Create documentation on how the `groups.members` REST API endpoint works
-
-## im.members
-
-Create documentation on how the `im.members` REST API endpoint works
-
 ## Oauth2 O365
 
 Create documentation on how to use oauth2 o365 authentication service with Rocket.Chat. You can find info on this issue <https://github.com/RocketChat/Rocket.Chat/issues/6809>
-
-## channels.delete
-
-Create documentation on how the `channels.delete` REST API endpoint works
-
-## groups.delete
-
-Create documentation on how the `groups.delete` REST API endpoint works
-
-## Custom Fields
-
-Create documentation on how to add custom fields to Rocket.Chat and how they work.
